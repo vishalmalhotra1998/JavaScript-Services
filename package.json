@@ -1,0 +1,66 @@
+{
+  "name": "javascript-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint and fix",
+      "pre-push": "npm run lint"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "diamond": "node ./extra/patterns/diamondPattern.js",
+    "equilateral": "node ./extra/patterns/equilateralTriangle.js",
+    "extra": "npx babel-node extra",
+    "start:extra": "babel-node extra",
+    "start:extraTs": "tsc-watch --project . --onSuccess \"npm run nodemon\"",
+    "start": "tsc-watch --project . --onSuccess \"npm run nodemon\"",
+    "nodemon": "nodemon ./dist/index.js",
+    "lint": "./node_modules/tslint/bin/tslint -c tslint.json -p tsconfig.json --exclude 'node_modules/**/*.{j,t}s'",
+    "lint:fix": "npm run lint --fix",
+    "pre-commit": "npm test",
+    "pre-push": "npm run lint",
+    "dev": "concurrently \"npm start\" \"cd src/M4 && npm start\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishalmalhotra1998/Javascript-Server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vishalmalhotra1998/Javascript-Server/issues"
+  },
+  "homepage": "https://github.com/vishalmalhotra1998/Javascript-Server#readme",
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/node": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@types/express": "^4.17.2",
+    "@types/node": "^13.5.3",
+    "bcrypt": "^3.0.8",
+    "body-parser": "^1.19.0",
+    "commitizen": "^4.0.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "husky": "^4.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.2",
+    "tsc-watch": "^4.1.0",
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "concurrently": "^5.1.0",
+    "cors": "^2.8.5",
+    "mongoose": "^5.8.11",
+    "object-sizeof": "^1.5.3",
+    "performance-now": "^2.1.0",
+    "query-string": "^6.11.0",
+    "swagger-jsdoc": "^3.5.0",
+    "swagger-ui-express": "^4.1.3"
+  }
+}
