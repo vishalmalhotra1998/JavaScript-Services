@@ -1,6 +1,6 @@
 import UserRepository from '../../repositories/sort/UserRepository';
 import SystemResponse from '../../libs/SystemResponse';
-import { Request, Response,} from 'express';
+import { Request, Response, } from 'express';
 
 
 class SortStatsController {
@@ -17,10 +17,10 @@ class SortStatsController {
 
     }
 
-    get = async (req: Request, res: Response ) => {
+    get = async (req: Request, res: Response) => {
 
-        const {skip, limit , ...query } = req.query;
-        const options = {skip, limit};
+        const { skip, limit, ...query } = req.query;
+        const options = { skip, limit, sortBy: { 'createdAt': -1 } };
         const data = await this.userRepository.list(query, options);
         res.send(data);
 
@@ -28,10 +28,9 @@ class SortStatsController {
 
     post = async (req: Request, res: Response) => {
         try {
-            const { data} = req.body;
+            const { data } = req.body;
             const { id, sortDuration, sortAlgorithm } = data;
-
-            const options = { objectId: id, sortDuration , sortingAlgorithm: sortAlgorithm};
+            const options = { objectId: id, sortDuration, sortingAlgorithm: sortAlgorithm };
             const sortStats = await this.userRepository.create(options);
             res.send(sortStats);
 
@@ -40,14 +39,6 @@ class SortStatsController {
 
             SystemResponse.failure(res, error);
         }
-    }
-
-    prevVersions =  async (req: Request, res: Response) => {
-
-        const { skip, limit, ...query } = req.query;
-        const options = { skip, limit };
-        const data = await this.userRepository.getPreviousVersionList( query, options);
-        res.send(data);
     }
 
 }

@@ -51,9 +51,10 @@ class VersionRepository<D extends mongoose.Document, M extends mongoose.Model<D>
   }
 
   async list(query: any = {}, options: any = {}) {
+    const { sortBy } = options;
     query.deletedAt = undefined;
     delete options.sortBy;
-    options = { ...options, sort: { 'createdAt': 1 } };
+    options = { ...options, sort: sortBy};
     return this.modelType.find(query, undefined, options);
 
   }

@@ -4,8 +4,7 @@ import {
 } from 'react-router-dom';
 import TextFields from './pages/component/textField';
 import ViewRoutes from './pages/component/viewpage/viewRouter';
-import AuthlayoutRoute from './routes/AuthlayoutRoutes/AuthLayoutRoutes';
-import PrivatelayoutRoute from './routes/PrivatelayoutRoute/PrivatelayoutRoute';
+import {AuthlayoutRoute , PrivatelayoutRoute} from './routes/index';
 
 function App() {
   return (

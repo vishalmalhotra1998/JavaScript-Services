@@ -1,7 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { Route } from 'react-router-dom';
-import  AuthLayout  from '../../layout/authLayout/AuthLayout';
+import { AuthLayout } from '../../layout/index';
 
 const AuthLayoutRoute = ({ component: Component, ...rest }) => (
   <Route

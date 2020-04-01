@@ -1,7 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import { Route } from 'react-router-dom';
-import  PrivateLayout  from '../../layout/privateLayout/privateLayout';
+import { PrivateLayout } from '../../layout/index';
 
 const PrivateLayoutRoute = ({ component: Component, ...rest }) => (
   <Route

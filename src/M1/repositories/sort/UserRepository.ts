@@ -35,9 +35,6 @@ class UserRepository extends VersionRepository<IUserModel, mongoose.Model<IUserM
   get = (query: object) => {
     return super.get(query);
   }
-  getPreviousVersionList = (query: any = {}, options: any = {}) => {
-    return super.getPreviousVersionList(query, options);
-  }
 }
 
 export default UserRepository;
