@@ -179,7 +179,7 @@ class SimpleTable extends React.Component {
 
 
   render() {
-    const { array, open, sortTime, loading, sort } = this.state;
+    const { array, open, sortTime, loading, sortAlgorithm } = this.state;
     const { classes, match: { url } } = this.props;
 
     return (
@@ -202,7 +202,6 @@ class SimpleTable extends React.Component {
                     <TableCell align="left">Generationtime</TableCell>
                     <TableCell align="left">Sort Button</TableCell>
                     <TableCell align="left">Sort Duration</TableCell>
-                    <TableCell align="left">Sort Algorithm</TableCell>
                     <TableCell align="left">ViewPage</TableCell>
                   </TableRow>
                 </TableHead>
@@ -222,25 +221,6 @@ class SimpleTable extends React.Component {
                             {loading && <CircularProgress />}
                           </TableCell>
                           <TableCell align="left">{sortTime[row.originalId]}</TableCell>
-                          <TableCell align="left">
-                            <FormControl variant="outlined" className={classes.formControl}>
-                              <InputLabel id="demo-simple-select-outlined-label">Alogrithm</InputLabel>
-                              <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
-                                label="Algorithm"
-                                value={sort}
-                                onChange={this.handleSelectChange}
-                              >
-                                <MenuItem value="">
-                                  <em>None</em>
-                                </MenuItem>
-                                <MenuItem value="Bubble Sort" >Bubble Sort</MenuItem>
-                                <MenuItem value="Selection Sort" >Selection Sort</MenuItem>
-                                <MenuItem value="Insertion Sort" >Insertion Sort</MenuItem>
-                                <MenuItem value="Merge Sort" >Merge Sort</MenuItem>
-                              </Select>
-                            </FormControl></TableCell>
                           <TableCell align="left"><Fragment key={row.originalId}><Linktag href="#" component={Link} to={`${url}/${row.originalId}`}> viewpage </Linktag></Fragment></TableCell>
                         </TableRow>
 
@@ -254,13 +234,16 @@ class SimpleTable extends React.Component {
                       Sort unsort object
                 </Button></TableCell>
                     <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
                     <TableCell> <FormControl variant="outlined" className={classes.formControl}>
                       <InputLabel id="demo-simple-select-outlined-label">Alogrithm</InputLabel>
                       <Select
                         labelId="demo-simple-select-outlined-label"
                         id="demo-simple-select-outlined"
                         label="Algorithm"
-                        value={sort}
+                        value={sortAlgorithm}
                         onChange={this.handleSelectChange}
                       >
                         <MenuItem value="">
