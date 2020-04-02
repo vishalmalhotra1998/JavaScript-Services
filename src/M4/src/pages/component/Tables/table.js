@@ -18,7 +18,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import axios from 'axios';
 
-const useStyles = (theme)=>({
+const useStyles = (theme) => ({
   table: {
     minWidth: 650,
   },
@@ -37,7 +37,29 @@ class SimpleTable extends React.Component {
       sortTime: {},
       loading: false,
       sortAlgorithm: '',
+      sort: ''
     }
+  }
+
+
+  Mapping = (response) => {
+    const parsedError = {}
+     response.data.forEach(async (element) => {
+      const response1 = await axios.get('http://localhost:9002/api/sort/', {
+        params: {
+          objectId: element.originalId,
+        }
+      });
+      if (!response1.data.length) {
+        parsedError[element.originalId] = 'N/A';
+      }
+      else {
+        parsedError[element.originalId] = response1.data[0].sortDuration;
+      }
+      this.setState({
+        sortTime: parsedError,
+      });
+    })
   }
 
   onHandleChangeButton = async () => {
@@ -46,128 +68,120 @@ class SimpleTable extends React.Component {
       array: response.data,
       open: true
     });
-
+    await this.Mapping(response);
   }
 
   perticularSortButton = async (value) => {
 
     const { sortAlgorithm } = this.state;
-    if(sortAlgorithm) {
-    await axios.put('http://localhost:9002/api/sort/', {
-      id: value,
-      sortingAlgorithm: sortAlgorithm,
-    });
-    const objectId = value;
-    console.log('objectId',objectId);
-    this.setState({
-      loading: true,
-    });
-    const response1 = await axios.get('http://localhost:9002/api/sort/', {
-      params: {
-        objectId,
-        limit : 1
-      }
-    });
-    const { loading } = this.state;
-    console.log('---------Response Data ----------', response1.data, loading);
-    const { sortTime } = this.state;
-    this.setState({
-      sortTime: {
-        ...sortTime,
-        [value]: response1.data[0].sortDuration,
-      },
-      sortAlgorithm: '',
-    }, () => {
-      this.setState({
-        loading: false,
-      });
-    })
-  }
-  }
-
-  allSortButton = async () => {
-    const {sortAlgorithm} = this.state;
-    if(sortAlgorithm){
-    const response = await axios.get('http://localhost:9002/api/unsort/');
-    const  parsedvalues = {};
-    response.data.forEach(async (element) => {
-    
-       await axios.put('http://localhost:9002/api/sort/', {
-        id: element.originalId,
+    if (sortAlgorithm) {
+      await axios.put('http://localhost:9002/api/sort/', {
+        id: value,
         sortingAlgorithm: sortAlgorithm,
       });
-      const objectId = element.originalId;
-      console.log('objectId',objectId);
-       const sortObjects =  await  axios.get('http://localhost:9002/api/sort/', {
+      const objectId = value;
+      this.setState({
+        loading: true,
+      });
+      const response1 = await axios.get('http://localhost:9002/api/sort/', {
         params: {
           objectId,
         }
       });
-      parsedvalues[objectId]= sortObjects.data[0].sortDuration;
-
+      const { sortTime } = this.state;
       this.setState({
-        sortTime: parsedvalues,
-        
+        sortTime: {
+          ...sortTime,
+          [value]: response1.data[0].sortDuration,
+        },
+        sortAlgorithm: '',
+      }, () => {
+        this.setState({
+          loading: false,
+        });
       })
-    })
+    }
   }
+
+  allSortButton = async () => {
+    const { sortAlgorithm } = this.state;
+    if (sortAlgorithm) {
+      const response = await axios.get('http://localhost:9002/api/unsort/');
+      const parsedvalues = {};
+      response.data.forEach(async (element) => {
+
+        await axios.put('http://localhost:9002/api/sort/', {
+          id: element.originalId,
+          sortingAlgorithm: sortAlgorithm,
+        });
+        const objectId = element.originalId;
+        console.log('objectId', objectId);
+        const sortObjects = await axios.get('http://localhost:9002/api/sort/', {
+          params: {
+            objectId,
+          }
+        });
+        parsedvalues[objectId] = sortObjects.data[0].sortDuration;
+
+        this.setState({
+          sortTime: parsedvalues,
+
+        });
+      });
+    }
   }
 
   allUnSortButton = async () => {
-    const {sortAlgorithm} = this.state;
-    if(sortAlgorithm){
-    const response = await axios.get('http://localhost:9002/api/unsort/');
-    const  parsedvalues = {};
-    response.data.forEach(async (element) => {
-     
-       const sortObjects =  await  axios.get('http://localhost:9002/api/sort/', {
-        params: {
-          objectId: element.originalId,
-        }
-      });
-      if(!sortObjects.data.length){
+    const { sortAlgorithm } = this.state;
+    if (sortAlgorithm) {
+      const response = await axios.get('http://localhost:9002/api/unsort/');
+      const parsedvalues = {};
+      response.data.forEach(async (element) => {
 
-        await axios.put('http://localhost:9002/api/sort/', {
-        id: element.originalId,
-        sortingAlgorithm: sortAlgorithm,
-      });
-      const sortObjects =  await  axios.get('http://localhost:9002/api/sort/', {
-        params: {
-          objectId: element.originalId,
-        }
-      });
-      parsedvalues[element.originalId]= sortObjects.data[0].sortDuration;
+        const sortObjects = await axios.get('http://localhost:9002/api/sort/', {
+          params: {
+            objectId: element.originalId,
+          }
+        });
+        if (!sortObjects.data.length) {
 
-      this.setState({
-        sortTime: parsedvalues,
+          await axios.put('http://localhost:9002/api/sort/', {
+            id: element.originalId,
+            sortingAlgorithm: sortAlgorithm,
+          });
+          const sortObjects = await axios.get('http://localhost:9002/api/sort/', {
+            params: {
+              objectId: element.originalId,
+            }
+          });
+          parsedvalues[element.originalId] = sortObjects.data[0].sortDuration;
+
+          this.setState({
+            sortTime: parsedvalues,
+          })
+        }
+        else {
+          parsedvalues[element.originalId] = sortObjects.data[0].sortDuration;
+
+          this.setState({
+            sortTime: parsedvalues,
+          });
+        }
       })
     }
-    else{
-      parsedvalues[element.originalId]= sortObjects.data[0].sortDuration;
-
-      this.setState({
-        sortTime: parsedvalues,
-      })
-
-
-    }
-    })
-  }
   }
 
-  handleSelectChange=(values)=>{
-    this.setState({sortAlgorithm: values.target.value},()=>{
+  handleSelectChange = (values) => {
+    this.setState({ sortAlgorithm: values.target.value }, () => {
       console.log(this.state);
     });
   }
 
 
   render() {
-    const { match: { url } } = this.props;
-    const { array, open, sortTime, loading } = this.state;
-    const { classes } = this.props;
-  
-    console.log(this.state);
+    const { array, open, sortTime, loading, sort } = this.state;
+    const { classes, match: { url } } = this.props;
+
     return (
       <>
         <Box marginBottom="20px" marginTop="20px" width="70vw" />
@@ -183,6 +197,9 @@ class SimpleTable extends React.Component {
                 <TableHead>
                   <TableRow>
                     <TableCell align="left">ID</TableCell>
+                    <TableCell align="left">KeyCount</TableCell>
+                    <TableCell align="left">Depth</TableCell>
+                    <TableCell align="left">Generationtime</TableCell>
                     <TableCell align="left">Sort Button</TableCell>
                     <TableCell align="left">Sort Duration</TableCell>
                     <TableCell align="left">Sort Algorithm</TableCell>
@@ -195,7 +212,9 @@ class SimpleTable extends React.Component {
                       <>
                         <TableRow key={row.originalId}>
                           <TableCell align="left">{row.originalId}</TableCell>
-
+                          <TableCell align="left">{row.keyCount}</TableCell>
+                          <TableCell align="left">{row.depth}</TableCell>
+                          <TableCell align="left">{row.generationTime}</TableCell>
                           <TableCell align="left">
                             <Button variant="contained" color="primary" onClick={() => { this.perticularSortButton(row.originalId) }}>
                               Sort Object
@@ -210,6 +229,7 @@ class SimpleTable extends React.Component {
                                 labelId="demo-simple-select-outlined-label"
                                 id="demo-simple-select-outlined"
                                 label="Algorithm"
+                                value={sort}
                                 onChange={this.handleSelectChange}
                               >
                                 <MenuItem value="">
@@ -227,34 +247,35 @@ class SimpleTable extends React.Component {
                       </>
                     ))
                   }
-               <TableRow>
-          <TableCell><Button align="right" variant="contained" color="primary" onClick={() => { this.allSortButton() }}>
-              Sort All Object
+                  <TableRow>
+                    <TableCell><Button align="right" variant="contained" color="primary" onClick={() => { this.allSortButton() }}>
+                      Sort All Object
                 </Button></TableCell><TableCell><Button align="right" variant="contained" color="primary" onClick={() => { this.allUnSortButton() }}>
-              Sort unsort object
-                </Button></TableCell> 
-                <TableCell></TableCell>
-                <TableCell> <FormControl variant="outlined" className={classes.formControl}>
-                              <InputLabel id="demo-simple-select-outlined-label">Alogrithm</InputLabel>
-                              <Select
-                                labelId="demo-simple-select-outlined-label"
-                                id="demo-simple-select-outlined"
-                                label="Algorithm"
-                                onChange={this.handleSelectChange}
-                              >
-                                <MenuItem value="">
-                                  <em>None</em>
-                                </MenuItem>
-                                <MenuItem value="Bubble Sort" >Bubble Sort</MenuItem>
-                                <MenuItem value="Selection Sort" >Selection Sort</MenuItem>
-                                <MenuItem value="Insertion Sort" >Insertion Sort</MenuItem>
-                                <MenuItem value="Merge Sort" >Merge Sort</MenuItem>
-                              </Select>
-                            </FormControl>
-                            </TableCell> 
+                      Sort unsort object
+                </Button></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell> <FormControl variant="outlined" className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-outlined-label">Alogrithm</InputLabel>
+                      <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        label="Algorithm"
+                        value={sort}
+                        onChange={this.handleSelectChange}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value="Bubble Sort" >Bubble Sort</MenuItem>
+                        <MenuItem value="Selection Sort" >Selection Sort</MenuItem>
+                        <MenuItem value="Insertion Sort" >Insertion Sort</MenuItem>
+                        <MenuItem value="Merge Sort" >Merge Sort</MenuItem>
+                      </Select>
+                    </FormControl>
+                    </TableCell>
 
-                            </TableRow>
-                            </TableBody>
+                  </TableRow>
+                </TableBody>
               </Table>
             </TableContainer>
           </>

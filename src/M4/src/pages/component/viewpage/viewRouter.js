@@ -5,8 +5,6 @@ import SimpleTable from '../Tables/table';
 
 const ViewRoutes = () => {
     const { path } = useRouteMatch();
-    console.log('Vieiieieieieieieeieie');
-    console.log('yyyyyyyyyyyyy', path);
     return (
         <Switch>
             <Route exact path={path} component={SimpleTable} />

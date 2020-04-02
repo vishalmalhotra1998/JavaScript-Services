@@ -65,7 +65,7 @@ class TextFields extends React.Component {
 
       }).catch((error)=>{
        console.log(error);
-        error.inner.map((element)=>{
+        error.inner.forEach((element)=>{
           if(touched[element.path]){
              parsedError[element.path]= element.message;
           }
