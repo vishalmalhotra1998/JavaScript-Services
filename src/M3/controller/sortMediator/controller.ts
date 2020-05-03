@@ -29,12 +29,12 @@ put = async (req: Request, res: Response) => {
         method: 'post',
             url: 'http://localhost:9001/api/sorting/',
             data: {
-             data: response.data.data,
+             data: response.data,
              sortAlgorithm: sortingAlgorithm
             }
 
     });
-    const { data } = sortObject.data;
+    const { data } = sortObject;
     const { sortTime } = data;
     const createSortStats = await axios({
       method: 'post',

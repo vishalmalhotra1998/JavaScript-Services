@@ -9,23 +9,24 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import axios from 'axios';
 import Box from '@material-ui/core/Box';
 
 const schema = yup.object().shape({
   keyCount: yup
-  .string()
-  .matches(/^([2-9]|1[0])$/,'KeyCount is invalid')
-  .required('keyCount is required')
-  .label('KeyCount')
-,
+    .string()
+    .matches(/^([2-9]|1[0])$/, 'KeyCount is invalid')
+    .required('keyCount is required')
+    .label('KeyCount')
+  ,
   depth: yup
     .string()
-    .matches(/^([2-9]|1[0])$/,'KeyCount is invalid')
+    .matches(/^([2-9]|1[0])$/, 'KeyCount is invalid')
     .required()
     .label('Depth')
-    ,
+  ,
 })
 
 const useStyles = (theme) => ({
@@ -45,29 +46,29 @@ class TextFields extends React.Component {
       keyCount: '',
       depth: '',
       dataObject: {},
-      errorMessage:{},
+      errorMessage: {},
       touched: {},
       isValid: false,
 
     }
   }
 
-  hasError=()=>{
-    const { keyCount, depth ,touched} = this.state;
-    const parsedError={};
-    schema.validate({keyCount,depth}
-    ,{abortEarly: false}).then(()=>{
-       
+  hasError = () => {
+    const { keyCount, depth, touched } = this.state;
+    const parsedError = {};
+    schema.validate({ keyCount, depth }
+      , { abortEarly: false }).then(() => {
+
         this.setState({
           errorMessage: {},
           isValid: true,
         })
 
-      }).catch((error)=>{
-       console.log(error);
-        error.inner.forEach((element)=>{
-          if(touched[element.path]){
-             parsedError[element.path]= element.message;
+      }).catch((error) => {
+        console.log(error);
+        error.inner.forEach((element) => {
+          if (touched[element.path]) {
+            parsedError[element.path] = element.message;
           }
           this.setState({
             errorMessage: parsedError,
@@ -78,7 +79,7 @@ class TextFields extends React.Component {
 
   }
 
-  isTouched=(value)=>{
+  isTouched = (value) => {
 
     const { touched } = this.state;
     console.log(value);
@@ -87,33 +88,31 @@ class TextFields extends React.Component {
         ...touched,
         [value]: true,
       }
-    },()=>{this.hasError()})
+    }, () => { this.hasError() })
 
   }
 
   hanldeKeyCountChange = (values) => {
     this.setState({
       keyCount: values.target.value,
-    }, () => {this.hasError()});
+    }, () => { this.hasError() });
 
   }
 
   handleDepthChange = (values) => {
     this.setState({
       depth: values.target.value
-    },()=>{this.hasError()});
+    }, () => { this.hasError() });
   }
   handleOnClick = async () => {
     const { keyCount, depth } = this.state;
-    console.log('----no fight');
     const unsortData = await axios.post('http://localhost:9002/api/unsort/', {
       keyCount,
       depth
     });
 
-    const { data } = unsortData.data;
+    const { data } = unsortData;
     const parsedObject = JSON.parse(JSON.stringify(data));
-    console.log(parsedObject);
 
     this.setState({
       dataObject: parsedObject,
@@ -121,7 +120,7 @@ class TextFields extends React.Component {
   }
 
   render() {
-    const { dataObject ,errorMessage, isValid } = this.state;
+    const { dataObject, errorMessage, isValid } = this.state;
     const { classes } = this.props;
     return (
       <>
@@ -140,7 +139,7 @@ class TextFields extends React.Component {
           error={errorMessage.keyCount}
           helperText={errorMessage.keyCount}
           onChange={this.hanldeKeyCountChange}
-          onBlur={()=>{this.isTouched('keyCount')}}
+          onBlur={() => { this.isTouched('keyCount') }}
           fullWidth
         />
         <Box marginBottom="20px" marginTop="20px" width="70vw" />
@@ -155,7 +154,7 @@ class TextFields extends React.Component {
           }}
           variant="outlined"
           onChange={this.handleDepthChange}
-          onBlur={()=>{this.isTouched('depth')}}
+          onBlur={() => { this.isTouched('depth') }}
           fullWidth
         />
         <Box marginBottom="20px" width="70vw" />
@@ -179,17 +178,21 @@ class TextFields extends React.Component {
                 </TableHead>
                 <TableBody>
                   <>
-                        <TableRow key={dataObject.originalId}>
-                          <TableCell align="left">{dataObject.originalId}</TableCell>
-                          <TableCell align="left">{dataObject.keyCount}</TableCell>
-                          <TableCell align="left">{dataObject.depth}</TableCell>
-                          <TableCell align="left">{dataObject.generationTime}</TableCell>
-                          <TableCell align="left">{dataObject.size}</TableCell>
-                        </TableRow>
-                      </>
+                    <TableRow key={dataObject.originalId}>
+                      <TableCell align="left">{dataObject.originalId}</TableCell>
+                      <TableCell align="left">{dataObject.keyCount}</TableCell>
+                      <TableCell align="left">{dataObject.depth}</TableCell>
+                      <TableCell align="left">{dataObject.generationTime}</TableCell>
+                      <TableCell align="left">{dataObject.size}</TableCell>
+                    </TableRow>
+                  </>
                 </TableBody>
               </Table>
             </TableContainer>
+            <Box marginBottom="20px" width="70vw" />
+            <Button variant="contained" color="primary" component={Link} to="objecttable">
+              All object
+            </Button>
           </div>
         }
       </>

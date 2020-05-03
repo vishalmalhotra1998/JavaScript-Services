@@ -18,7 +18,6 @@ class ViewPage extends React.Component {
                 objectId: value,
             }
         });
-        console.log('ckicmasiocmaocmaiocmqoimqeomqwocmeqwoicmeowicmiow    mcowioiow   w', data.data);
 
         this.setState({
             array: data.data,

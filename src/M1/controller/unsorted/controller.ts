@@ -21,29 +21,27 @@ class UnsortedController {
   post = async (req: Request, res: Response) => {
     try {
       const { keyCount, depth } = req.body;
-      console.log('This', keyCount);
       const sizeof = require('object-sizeof');
       const performance = require('performance-now');
       const start = performance();
       const obj = generateObject(keyCount, depth);
       const end = performance();
-
       const options = { ...req.body, obj, size: sizeof(obj) + 'B', generationTime: (end - start + 'ms') };
       const data = await this.userRepository.create(options);
-      SystemResponse.success(res, data, 'Check For Creation');
+      res.send(data);
     }
     catch (error) {
-
       SystemResponse.failure(res, error);
     }
   }
+
   list = async (req: Request, res: Response) => {
     try {
       const data = await this.userRepository.list(req.query);
       if (!data) {
         throw { message: 'no data to Find' };
       }
-      SystemResponse.success(res, data, 'finding data');
+      res.send(data);
     }
     catch (error) {
 
@@ -56,25 +54,25 @@ class UnsortedController {
   put = async (req: Request, res: Response) => {
 
     const { data, dataToUpdate } = req.body;
-    const data1 = await this.userRepository.update(data, dataToUpdate);
-    SystemResponse.success(res, data1, 'update this data');
+    const updateData = await this.userRepository.update(data, dataToUpdate);
+    res.send(updateData);
   }
 
   get = async (req: Request, res: Response) => {
 
     const { id, skip, limit, ...query } = req.query;
-    let data1;
+    let data;
     if (id) {
-      data1 = await this.userRepository.get({ id });
+      data = await this.userRepository.get({ id });
     }
     else {
       const options = { skip, limit };
-      data1 = await this.userRepository.list(query, options);
+      data = await this.userRepository.list(query, options);
     }
 
     console.log('Inside get');
 
-    SystemResponse.success(res, data1, 'yyoyoyoy');
+    res.send(data);
 
   }
 

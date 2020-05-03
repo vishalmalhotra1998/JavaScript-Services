@@ -44,7 +44,7 @@ class SimpleTable extends React.Component {
 
   Mapping = (response) => {
     const parsedError = {}
-     response.data.forEach(async (element) => {
+    response.data.forEach(async (element) => {
       const response1 = await axios.get('http://localhost:9002/api/sort/', {
         params: {
           objectId: element.originalId,

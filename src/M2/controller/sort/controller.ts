@@ -32,9 +32,10 @@ class SortedController {
           newObj = adjust(result, data.obj, bubbleSort);
           id = data._id;
           const end = performance();
-          SystemResponse.success(res, { newObj, sortTime: (end - start) + 'ms', }, 'ccccc');
+          res.send({ newObj, sortTime: (end - start) + 'ms', });
           break;
         }
+
         case 'Selection Sort': {
           console.log('---------Selection Sort---------------');
           const start = performance();
@@ -42,9 +43,10 @@ class SortedController {
           newObj = adjust(result, data.obj, selectionSort);
           id = data._id;
           const end = performance();
-          SystemResponse.success(res, { newObj, sortTime: (end - start) + 'ms', sortingAlgorithm: sortAlgorithm }, 'ccccc');
+          res.send({ newObj, sortTime: (end - start) + 'ms', sortingAlgorithm: sortAlgorithm });
           break;
         }
+
         case 'Insertion Sort': {
           console.log('---------Insertion Sort---------------');
           const start = performance();
@@ -52,9 +54,10 @@ class SortedController {
           newObj = adjust(result, data.obj, insertionSort);
           id = data._id;
           const end = performance();
-          SystemResponse.success(res, { newObj, sortTime: (end - start) + 'ms', sortingAlgorithm: sortAlgorithm }, 'ccccc');
+          res.send({ newObj, sortTime: (end - start) + 'ms', sortingAlgorithm: sortAlgorithm });
           break;
         }
+
         case 'Merge Sort': {
           console.log('---------MergeSort---------------');
           const start = performance();
@@ -62,7 +65,7 @@ class SortedController {
           newObj = adjust(result, data.obj, mergeSort);
           id = data._id;
           const end = performance();
-          SystemResponse.success(res, { newObj, sortTime: (end - start) + 'ms', sortingAlgorithm: sortAlgorithm }, 'ccccc');
+          res.send({ newObj, sortTime: (end - start) + 'ms', sortingAlgorithm: sortAlgorithm });
           break;
         }
 
@@ -73,8 +76,7 @@ class SortedController {
           newObj = adjust(result, data.obj, mergeSort);
           id = data._id;
           const end = performance();
-          SystemResponse.success(res, { newObj, sortTime: (end - start) + 'ms', sortingAlgorithm: 'Merge Sort' }, 'ccccc');
-
+          res.send({ newObj, sortTime: (end - start) + 'ms', sortingAlgorithm: 'Merge Sort' });
         }
 
       }
