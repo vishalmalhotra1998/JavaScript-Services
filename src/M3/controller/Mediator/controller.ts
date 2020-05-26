@@ -85,10 +85,14 @@ class MediatorController {
 
   list = async (req: Request, res: Response) => {
 
-    const response = await axios.get('http://localhost:9000/api/unsortCreate');
-
+    const { skip, limit } = req.query;
+    const response = await axios.get('http://localhost:9000/api/unsortCreate', {
+      params: {
+        skip,
+        limit
+      }
+    });
     const { data } = response;
-
     res.send(data);
 
   }

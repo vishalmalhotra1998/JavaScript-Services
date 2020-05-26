@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import SimpleTable1 from '../component/Table';
 
 class Table extends Component {
@@ -13,25 +14,55 @@ class Table extends Component {
       sortTime: {},
       loading: false,
       sortAlgorithm: '',
-      sort: ''
+      sort: '',
+      start: 0,
+      last: 10,
     }
   }
 
   componentDidMount = () => {
     console.log('------------Componenet Did Mount----------------');
-    axios.get('http://localhost:9002/api/unsort/').then(async (response) => {
+    const { start, last } = this.state;
+    axios.get('http://localhost:9002/api/unsort', {
+      params: {
+        skip: start,
+        limit: last
+      }
+    }).then(async (response) => {
       this.setState({
         responseData: response.data,
         loader: false,
       });
-      await this.Mapping(response);
+      await this.Mapping(response.data);
     });
 
-
+    this.setState({
+      start: (start + last) + 1,
+    })
   }
+
+
+  fetchData = async () => {
+    const { start, last, responseData } = this.state;
+    this.setState({
+      start: (start + last) + 1,
+    });
+    await axios.get('http://localhost:9002/api/unsort/', {
+      params: {
+        skip: start,
+        limit: last
+      }
+    }).then(async (response) => {
+      this.setState({
+        responseData: responseData.concat(response.data),
+      });
+      await this.Mapping(responseData);
+    });
+  }
+
   Mapping = async (response) => {
     const parsedError = {}
-    response.data.forEach(async (element) => {
+    response.forEach(async (element) => {
       const response1 = await axios.get('http://localhost:9002/api/sort/', {
         params: {
           objectId: element.originalId,
@@ -83,38 +114,14 @@ class Table extends Component {
   }
 
   allSortButton = async () => {
-    const { sortAlgorithm } = this.state;
+    const { sortAlgorithm , start } = this.state;
     if (sortAlgorithm) {
-      const response = await axios.get('http://localhost:9002/api/unsort/');
-      const parsedvalues = {};
-      response.data.forEach(async (element) => {
-
-        await axios.put('http://localhost:9002/api/sort/', {
-          id: element.originalId,
-          sortingAlgorithm: sortAlgorithm,
-        });
-        const objectId = element.originalId;
-        console.log('objectId', objectId);
-        const sortObjects = await axios.get('http://localhost:9002/api/sort/', {
-          params: {
-            objectId,
-          }
-        });
-        parsedvalues[objectId] = sortObjects.data[0].sortDuration;
-
-        this.setState({
-          sortTime: parsedvalues,
-        });
-
+      const response = await axios.get('http://localhost:9002/api/unsort/', {
+        params: {
+          skip: 0,
+          limit: start
+        }
       });
-    }
-  }
-
-
-  allSortButton = async () => {
-    const { sortAlgorithm } = this.state;
-    if (sortAlgorithm) {
-      const response = await axios.get('http://localhost:9002/api/unsort/');
       const parsedvalues = {};
       response.data.forEach(async (element) => {
 
@@ -139,9 +146,14 @@ class Table extends Component {
   }
 
   allUnSortButton = async () => {
-    const { sortAlgorithm } = this.state;
+    const { sortAlgorithm, start } = this.state;
     if (sortAlgorithm) {
-      const response = await axios.get('http://localhost:9002/api/unsort/');
+      const response = await axios.get('http://localhost:9002/api/unsort/', {
+        params: {
+          skip: 0,
+          limit: start
+        }
+      });
       const parsedvalues = {};
       response.data.forEach(async (element) => {
         const sortObjects = await axios.get('http://localhost:9002/api/sort/', {
@@ -191,10 +203,24 @@ class Table extends Component {
       if (responseData.length) {
 
         return (<>
-          <SimpleTable1 column={ColumnName} array={responseData} sortAlgorithm={sortAlgorithm} sortTime={sortTime} perticularSortButton={this.perticularSortButton}
-            handleSelectChange={this.handleSelectChange} allSortButton={this.allSortButton} allUnSortButton={this.allUnSortButton}
-            loading={loading} url={url} />
-        </>);
+         <h1 align="center">Object Table</h1>
+          <InfiniteScroll
+            dataLength={responseData.length}
+            next={this.fetchData}
+            hasMore={true}
+            loader={<h4>load...</h4>}
+            endMessage={
+              <p>...Endgame</p>
+            }
+          >
+            <SimpleTable1 column={ColumnName} array={responseData} sortAlgorithm={sortAlgorithm} sortTime={sortTime} perticularSortButton={this.perticularSortButton}
+              handleSelectChange={this.handleSelectChange} allSortButton={this.allSortButton} allUnSortButton={this.allUnSortButton}
+              loading={loading} url={url} />
+
+          </InfiniteScroll>
+        </>
+
+        );
       }
       return (<>
         <p>No Data to return </p>

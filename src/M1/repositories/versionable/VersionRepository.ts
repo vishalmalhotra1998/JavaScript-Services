@@ -58,9 +58,6 @@ class VersionRepository<D extends mongoose.Document, M extends mongoose.Model<D>
     return this.modelType.find(query, undefined, options);
 
   }
-  async getPreviousVersionList(query: any = {}, options: any = {}): Promise<D[]> {
-    return this.modelType.find(query, undefined, options);
-  }
 }
 
 export default VersionRepository;

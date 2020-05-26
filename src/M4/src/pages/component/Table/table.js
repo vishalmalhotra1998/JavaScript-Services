@@ -9,7 +9,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { CircularProgress } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
 import { Link } from 'react-router-dom';
 import Linktag from '@material-ui/core/Link';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -36,8 +35,7 @@ class SimpleTable extends React.Component {
   render() {
     const { 
       classes, column, array, sortTime, perticularSortButton, handleSelectChange,
-      sortAlgorithm, allSortButton, allUnSortButton, loading,
-      url
+      sortAlgorithm, allSortButton, allUnSortButton, loading, url
      } = this.props;
 
     return (

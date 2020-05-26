@@ -2,7 +2,7 @@ import React from 'react';
 import {
   BrowserRouter as Router, Route, Redirect, Switch,
 } from 'react-router-dom';
-import { TextFields, Table } from './pages';
+import { TextFields } from './pages';
 import { ViewRoutes } from './pages/component';
 import { AuthlayoutRoute, PrivatelayoutRoute } from './routes/index';
 
@@ -15,7 +15,6 @@ function App() {
         </Route>
         <AuthlayoutRoute exact path="/main" component={TextFields} />
         <PrivatelayoutRoute path="/objectTable" component={ViewRoutes} />
-        {/* <PrivatelayoutRoute path="/check" component={Table} /> */}
       </Switch>
     </Router>
   );

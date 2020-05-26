@@ -35,22 +35,6 @@ class UnsortedController {
     }
   }
 
-  list = async (req: Request, res: Response) => {
-    try {
-      const data = await this.userRepository.list(req.query);
-      if (!data) {
-        throw { message: 'no data to Find' };
-      }
-      res.send(data);
-    }
-    catch (error) {
-
-      SystemResponse.failure(res, error);
-
-    }
-
-  }
-
   put = async (req: Request, res: Response) => {
 
     const { data, dataToUpdate } = req.body;
@@ -59,17 +43,17 @@ class UnsortedController {
   }
 
   get = async (req: Request, res: Response) => {
-
-    const { id, skip, limit, ...query } = req.query;
+    const { id, skip: start, limit: last, ...query } = req.query;
     let data;
     if (id) {
       data = await this.userRepository.get({ id });
     }
     else {
+      const skip = Number(start);
+      const limit = Number(last);
       const options = { skip, limit };
       data = await this.userRepository.list(query, options);
     }
-
     console.log('Inside get');
 
     res.send(data);
