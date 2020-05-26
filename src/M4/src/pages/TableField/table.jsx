@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import SimpleTable1 from '../component/Table';
+import SimpleTable from '../component/Table';
 
 class Table extends Component {
   constructor(props) {
@@ -213,7 +213,7 @@ class Table extends Component {
               <p>...Endgame</p>
             }
           >
-            <SimpleTable1 column={ColumnName} array={responseData} sortAlgorithm={sortAlgorithm} sortTime={sortTime} perticularSortButton={this.perticularSortButton}
+            <SimpleTable column={ColumnName} array={responseData} sortAlgorithm={sortAlgorithm} sortTime={sortTime} perticularSortButton={this.perticularSortButton}
               handleSelectChange={this.handleSelectChange} allSortButton={this.allSortButton} allUnSortButton={this.allUnSortButton}
               loading={loading} url={url} />
 
